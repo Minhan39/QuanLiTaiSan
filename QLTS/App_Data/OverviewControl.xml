@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Nodes>
+	<TreeViewNode Text="Kiến trúc" NavigateUrl="#">
+		<TreeViewNode Text="Khu vực/Toà nhà" NavigateUrl="/Area/Index" />
+		<TreeViewNode Text="Phòng/Sân" NavigateUrl="/Room/Index" />
+	</TreeViewNode>
+	<TreeViewNode Text="Tài sản" NavigateUrl="#">
+		<TreeViewNode Text="Tài sản" NavigateUrl="/Asset/Index" />
+		<TreeViewNode Text="Phân loại tài sản" NavigateUrl="/Category/Index" />
+		<TreeViewNode Text="Nhà cung cấp" NavigateUrl="/Supplier/Index" />
+	</TreeViewNode>
+	<TreeViewNode Text="Biên bản" NavigateUrl="#">
+		<TreeViewNode Text="Biên bản nhập tài sản đầu kì" NavigateUrl="/MinuteEnterAssetAtBegin/Index" />
+		<TreeViewNode Text="Biên bản giao nhận tài sản" NavigateUrl="/MinuteAssetDeliveryReceive/Index" />
+		<TreeViewNode Text="Biên bản kiểm kê tài sản" NavigateUrl="/MinuteAssetInventory/Index" />
+		<TreeViewNode Text="Biên bản bảo trì tài sản" NavigateUrl="/MinuteAssetMaintenance/Index" />
+		<TreeViewNode Text="Biên bản thanh lý tài sản" NavigateUrl="/MinuteAssetLiquidation/Index" />
+	</TreeViewNode>
+	<TreeViewNode Text="Hoạt động" NavigateUrl="#">
+		<TreeViewNode Text="Báo lỗi thiết bị" NavigateUrl="/ErrorReport/Index" />
+	</TreeViewNode>
+	<TreeViewNode Text="Dữ liệu ngoài (API nếu có)" NavigateUrl="#">
+		<TreeViewNode Text="Nhân viên" NavigateUrl="/Staff/Index/" />
+		<TreeViewNode Text="Phòng ban" NavigateUrl="/Department/Index/" />
+	</TreeViewNode>
+	<TreeViewNode Text="Báo cáo" NavigateUrl="#">
+		<TreeViewNode Text="Bảng điều khiển" NavigateUrl="/Home/Dashboard/" />
+		<TreeViewNode Text="Bản đồ TDMU" NavigateUrl="/Home/Map/" />
+		<TreeViewNode Text="Metaverse TDMU (Beta)" NavigateUrl="http://localhost:2002" />
+	</TreeViewNode>
+</Nodes>

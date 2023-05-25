@@ -1,0 +1,70 @@
+﻿@Html.DevExpress().GridView(settings =>
+{
+    settings.SettingsBehavior.AllowFocusedRow = true;
+    settings.CommandColumn.Visible = true;
+    settings.CommandColumn.ShowSelectCheckbox = true;
+    settings.CommandColumn.VisibleIndex = 0;
+    settings.CommandColumn.Width = System.Web.UI.WebControls.Unit.Pixel(52);
+    settings.Name = "detailGrid_" + ViewData["Id"];
+    settings.SettingsDetail.MasterGridName = "gridView";
+    settings.CallbackRouteValues = new { Controller = "MinuteAssetDeliveryReceive", Action = "MasterDetailDetailPartial", CustomerID = ViewData["CustomerID"] };
+@*    settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);*@
+
+    settings.KeyFieldName = "Id";
+    settings.Columns.Add(columnSettings => 
+    {
+        columnSettings.FieldName = "Id";
+        columnSettings.Caption = "Mã";
+        columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(75);
+    });
+    settings.Columns.Add(columnSettings => 
+    {
+        columnSettings.FieldName = "AssetDetail.DefinitionId";
+        columnSettings.Caption = "Mã định nghĩa";
+        columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(75);
+    });
+    settings.Columns.Add(columnSettings =>
+    {
+        columnSettings.FieldName = "AssetDetailId";
+        columnSettings.Caption = "Trạng thái tài sản";
+        columnSettings.Visible = true;
+        columnSettings.ColumnType = MVCxGridViewColumnType.ComboBox;
+        columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(200);
+
+        var comboBoxProperties = columnSettings.PropertiesEdit as ComboBoxProperties;
+        comboBoxProperties.ValueField = "Id";
+        comboBoxProperties.TextField = "Asset.Name";
+        comboBoxProperties.ValueType = typeof(long);
+        comboBoxProperties.DataSource = QLTS.Models.AssetDetailHelper.GetAssetDetails();
+    });
+    settings.Columns.Add(columnSettings =>
+    {
+        columnSettings.FieldName = "AssetStatusId";
+        columnSettings.Caption = "Trạng thái tài sản khi giao nhận";
+        columnSettings.Visible = true;
+        columnSettings.ColumnType = MVCxGridViewColumnType.ComboBox;
+        columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(200);
+
+        var comboBoxProperties = columnSettings.PropertiesEdit as ComboBoxProperties;
+        comboBoxProperties.ValueField = "Id";
+        comboBoxProperties.TextField = "Name";
+        comboBoxProperties.ValueType = typeof(long);
+        comboBoxProperties.DataSource = QLTS.Models.AssetStatusHelper.GetAssetStatuses();
+    });
+    settings.Columns.Add(columnSettings =>
+    {
+        columnSettings.FieldName = "RoomId";
+        columnSettings.Caption = "Vị trí đặt tài sản";
+        columnSettings.Visible = true;
+        columnSettings.ColumnType = MVCxGridViewColumnType.ComboBox;
+        columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(200);
+
+        var comboBoxProperties = columnSettings.PropertiesEdit as ComboBoxProperties;
+        comboBoxProperties.ValueField = "Id";
+        comboBoxProperties.TextField = "Name";
+        comboBoxProperties.ValueType = typeof(long);
+        comboBoxProperties.DataSource = QLTS.Models.RoomHelper.GetRooms();
+    });
+
+    @*DevExpress.Web.Demos.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);*@
+}).Bind(Model).GetHtml()

@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="Elearning" />
+  <DataSources>
+    <EFDataSource Name="EF Data Source" Source="QLTS.Models.QLTSDbContext, QLTS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" ComponentName="eFDataSource1">
+      <CalculatedFields>
+        <CalculatedField Name="DefineName" Expression="[Firstname] + ' ' + [Lastname] " DataMember="Staffs" />
+        <CalculatedField Name="DefineFloor" Expression="'Tầng ' + [Floor] " DataMember="Rooms" />
+      </CalculatedFields>
+    </EFDataSource>
+    <SqlDataSource Name="SQL Data Source" ComponentName="sqlDataSource1">
+      <Connection Name="DefaultConnection" FromAppConfig="true" />
+      <Query Type="SelectQuery" Name="AssetDetail">
+        <Tables>
+          <Table Name="AssetDetail" />
+          <Table Name="Asset" />
+          <Table Name="Room" />
+          <Relation Type="Inner" Parent="AssetDetail" Nested="Asset">
+            <KeyColumn Parent="AssetId" Nested="Id" />
+          </Relation>
+          <Relation Type="Inner" Parent="AssetDetail" Nested="Room">
+            <KeyColumn Parent="RoomId" Nested="Id" />
+          </Relation>
+        </Tables>
+        <Columns>
+          <Column Table="AssetDetail" Name="AssetId" />
+          <Column Table="Asset" Name="Id" />
+          <Column Table="AssetDetail" Name="RoomId" />
+          <Column Table="Room" Name="Id" Alias="Room_Id" />
+          <Column Table="Room" Name="Name" />
+          <Column Table="AssetDetail" Name="Value" />
+          <Column Table="Asset" Name="Name" Alias="Asset_Name" />
+          <Column Table="AssetDetail" Name="DefinitionId" />
+          <Column Table="AssetDetail" Name="Id" Alias="AssetDetail_Id" />
+        </Columns>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <BoundImage ComponentName="boundImageDashboardItem1" Name="Bound Image 1" ShowCaption="false" DataSource="eFDataSource1" DataMember="Staffs" SizeMode="Zoom">
+      <DataItems>
+        <Dimension DataMember="Image" DefaultId="DataItem0" />
+        <Dimension DataMember="Fullname" DefaultId="DataItem1" />
+      </DataItems>
+      <HiddenDimensions>
+        <Dimension DefaultId="DataItem1" />
+      </HiddenDimensions>
+      <ImageItem DefaultId="DataItem0" />
+    </BoundImage>
+    <Card ComponentName="cardDashboardItem1" Name="Cards 1" ShowCaption="false" DataSource="eFDataSource1" DataMember="Staffs" FilterString="[DataItem1] = 'Nguyễn Văn B'">
+      <DataItems>
+        <Measure DataMember="DefineName" SummaryType="Count" DefaultId="DataItem0" />
+        <Dimension DataMember="DefineName" DefaultId="DataItem1" />
+        <Dimension DataMember="Email" DefaultId="DataItem2" />
+        <Dimension DataMember="Phone" DefaultId="DataItem3" />
+        <Dimension DataMember="Status" DefaultId="DataItem4" />
+        <Dimension DataMember="TypeStaff" DefaultId="DataItem5" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem2" />
+        <SeriesDimension DefaultId="DataItem3" />
+        <SeriesDimension DefaultId="DataItem4" />
+        <SeriesDimension DefaultId="DataItem5" />
+        <SeriesDimension DefaultId="DataItem1" />
+      </SeriesDimensions>
+      <Card>
+        <ActualValue DefaultId="DataItem0" />
+        <AbsoluteVariationNumericFormat />
+        <PercentVariationNumericFormat />
+        <PercentOfTargetNumericFormat />
+        <LayoutTemplate Type="Stretched">
+          <TopValue Visible="true" ValueType="ActualValue" DimensionIndex="0" />
+          <MainValue Visible="true" ValueType="Title" DimensionIndex="0" />
+          <SubValue Visible="true" ValueType="Subtitle" DimensionIndex="0" />
+          <BottomValue1 Visible="true" ValueType="PercentVariation" DimensionIndex="0" />
+          <BottomValue2 Visible="true" ValueType="AbsoluteVariation" DimensionIndex="0" />
+          <DeltaIndicator Visible="true" />
+          <Sparkline Visible="true" />
+        </LayoutTemplate>
+      </Card>
+    </Card>
+    <Grid ComponentName="gridDashboardItem1" Name="Danh sách tài sản" DataSource="sqlDataSource1" DataMember="AssetDetail" FilterString="[DataItem1] = 'Chương trình Elearning'">
+      <DataItems>
+        <Dimension DataMember="Asset_Name" DefaultId="DataItem2" />
+        <Measure DataMember="Value" DefaultId="DataItem3">
+          <NumericFormat FormatType="General" />
+        </Measure>
+        <Measure DataMember="AssetDetail_Id" SummaryType="Count" DefaultId="DataItem0" />
+        <Dimension DataMember="Name" DefaultId="DataItem1" />
+      </DataItems>
+      <HiddenDimensions>
+        <Dimension DefaultId="DataItem1" />
+      </HiddenDimensions>
+      <GridColumns>
+        <GridDimensionColumn Name="Tên tài sản">
+          <Dimension DefaultId="DataItem2" />
+        </GridDimensionColumn>
+        <GridMeasureColumn Name="Tổng số lượng">
+          <Measure DefaultId="DataItem0" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="Tổng giá trị">
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+    <Card ComponentName="cardDashboardItem2" Name="Cards 2" ShowCaption="false" DataSource="eFDataSource1" DataMember="Rooms" FilterString="[DataItem1] = 'Chương trình Elearning'">
+      <DataItems>
+        <Measure DataMember="Name" SummaryType="Count" DefaultId="DataItem0" />
+        <Dimension DataMember="Name" DefaultId="DataItem1" />
+        <Dimension DataMember="Area.Name" DefaultId="DataItem2" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem2" />
+        <SeriesDimension DefaultId="DataItem1" />
+      </SeriesDimensions>
+      <Card>
+        <ActualValue DefaultId="DataItem0" />
+        <AbsoluteVariationNumericFormat />
+        <PercentVariationNumericFormat />
+        <PercentOfTargetNumericFormat />
+        <LayoutTemplate Type="Stretched">
+          <TopValue Visible="true" ValueType="ActualValue" DimensionIndex="0" />
+          <MainValue Visible="true" ValueType="Title" DimensionIndex="0" />
+          <SubValue Visible="true" ValueType="Subtitle" DimensionIndex="0" />
+          <BottomValue1 Visible="true" ValueType="PercentVariation" DimensionIndex="0" />
+          <BottomValue2 Visible="true" ValueType="AbsoluteVariation" DimensionIndex="0" />
+          <DeltaIndicator Visible="true" />
+          <Sparkline Visible="true" />
+        </LayoutTemplate>
+      </Card>
+    </Card>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutGroup Orientation="Vertical">
+        <LayoutGroup Weight="0.68611111111111112">
+          <LayoutItem DashboardItem="boundImageDashboardItem1" Weight="0.29230769230769227" />
+          <LayoutGroup Orientation="Vertical" Weight="1.7076923076923074">
+            <LayoutItem DashboardItem="cardDashboardItem1" Weight="1.3126495726495726" />
+            <LayoutItem DashboardItem="cardDashboardItem2" Weight="1.2411965811965811" />
+          </LayoutGroup>
+        </LayoutGroup>
+        <LayoutItem DashboardItem="gridDashboardItem1" Weight="1.3138888888888891" />
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

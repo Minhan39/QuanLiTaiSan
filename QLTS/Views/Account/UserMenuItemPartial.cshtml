@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNet.Identity
+
+@{
+    var avatarUrl = "Content/Images/user.svg";
+}
+<div class="user-info">
+    <div class="avatar">
+        <img id="AvatarUrl" src="@Url.Content(avatarUrl)" />
+    </div>
+    <div class="text-container">
+        @Html.DevExpress().Label(labelSettings =>
+        {
+           labelSettings.Name = "userNameLabel";
+           labelSettings.Text = User.Identity.Name.Split('@')[0];
+           labelSettings.ControlStyle.CssClass = "user-name";
+       }).GetHtml()
+        @Html.DevExpress().Label(labelSettings =>
+        {
+            labelSettings.Name = "emailLabel";
+            labelSettings.Text = User.Identity.Name;
+            labelSettings.ControlStyle.CssClass = "email";
+        }).GetHtml()
+    </div>
+</div>

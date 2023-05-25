@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard CurrencyCulture="ar-QA">
+  <Title Text="Bảng điều khiển" />
+  <DataSources>
+    <EFDataSource Name="EF Data Source" Source="QLTS.Models.QLTS_DBEntities, QLTS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" ComponentName="eFDataSource1">
+      <CalculatedFields>
+        <CalculatedField Name="CalculatedTotal" Expression="[Total] + [TotalIncrease] - [TotalDecrease] " DataType="Decimal" DataMember="ReportCategories" />
+        <CalculatedField Name="CalculatedNumbers" Expression="[Numbers] + [NumberIncrease] - [NumberDecrease] " DataType="Integer" DataMember="ReportCategories" />
+        <CalculatedField Name="CalculatedNumber" Expression="[Numbers] + [NumberIncrease] - [NumberDecrease] " DataType="Integer" DataMember="Reports" />
+        <CalculatedField Name="CalculatedTotals" Expression="[Total] + [TotalIncrease] - [TotalDecrease] " DataType="Decimal" DataMember="Reports" />
+        <CalculatedField Name="CalculatedValue" Expression="[Amount] + VNĐ" DataMember="Assets" />
+      </CalculatedFields>
+    </EFDataSource>
+  </DataSources>
+  <Items>
+    <Pie ComponentName="pieDashboardItem1" Name="Pies 1" ShowCaption="false" DataSource="eFDataSource1" DataMember="ReportCategories" FilterString="[DataItem2] = True" PieType="Donut">
+      <DataItems>
+        <Measure DataMember="CalculatedTotal" Name="Tỉ trọng tài sản hiện tại" DefaultId="DataItem0" />
+        <Dimension DataMember="CategoryName" DefaultId="DataItem1" />
+        <Dimension DataMember="IsFirstClassCategory" DefaultId="DataItem2" />
+      </DataItems>
+      <HiddenDimensions>
+        <Dimension DefaultId="DataItem2" />
+      </HiddenDimensions>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Values>
+        <Value DefaultId="DataItem0" />
+      </Values>
+    </Pie>
+    <Card ComponentName="cardDashboardItem1" Name="Cards 1" ShowCaption="false" DataSource="eFDataSource1" DataMember="Reports" ContentLineCount="2">
+      <DataItems>
+        <Measure DataMember="CalculatedTotals" DefaultId="DataItem0">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="CalculatedNumber" DefaultId="DataItem1" />
+      </DataItems>
+      <Card Name="Tổng giá trị tài sản hiện tại">
+        <ActualValue DefaultId="DataItem0" />
+        <CardDeltaOptions ResultIndicationThresholdType="Absolute" />
+        <AbsoluteVariationNumericFormat />
+        <PercentVariationNumericFormat />
+        <PercentOfTargetNumericFormat />
+        <LayoutTemplate MinWidth="100" Type="Lightweight">
+          <MainValue Visible="true" ValueType="ActualValue" DimensionIndex="0" />
+          <SubValue Visible="true" ValueType="Title" DimensionIndex="0" />
+          <BottomValue Visible="true" ValueType="Subtitle" DimensionIndex="0" />
+          <DeltaIndicator Visible="false" />
+          <Sparkline Visible="false" />
+        </LayoutTemplate>
+      </Card>
+      <Card Name="Tổng số lượng tài sản hiện tại">
+        <ActualValue DefaultId="DataItem1" />
+        <AbsoluteVariationNumericFormat />
+        <PercentVariationNumericFormat />
+        <PercentOfTargetNumericFormat />
+        <LayoutTemplate MinWidth="100" Type="Lightweight">
+          <MainValue Visible="true" ValueType="ActualValue" DimensionIndex="0" />
+          <SubValue Visible="true" ValueType="Title" DimensionIndex="0" />
+          <BottomValue Visible="true" ValueType="Subtitle" DimensionIndex="0" />
+          <DeltaIndicator Visible="false" />
+          <Sparkline Visible="false" />
+        </LayoutTemplate>
+      </Card>
+    </Card>
+    <Grid ComponentName="gridDashboardItem1" Name="Grid 1" ShowCaption="false" DataSource="eFDataSource1" DataMember="Assets">
+      <DataItems>
+        <Dimension DataMember="AssetId" DefaultId="DataItem0" />
+        <Dimension DataMember="Name" DefaultId="DataItem1" />
+        <Measure DataMember="Quantity" DefaultId="DataItem3" />
+        <Measure DataMember="Amount" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+      </DataItems>
+      <GridColumns>
+        <GridDimensionColumn Name="Mã tài sản">
+          <Dimension DefaultId="DataItem0" />
+        </GridDimensionColumn>
+        <GridDimensionColumn Name="Tên tài sản">
+          <Dimension DefaultId="DataItem1" />
+        </GridDimensionColumn>
+        <GridMeasureColumn Name="Số lượng">
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="Giá trị">
+          <Measure DefaultId="DataItem2" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions />
+    </Grid>
+  </Items>
+  <LayoutOptions>
+    <Width Value="830" />
+    <Height Value="470" />
+  </LayoutOptions>
+  <LayoutTree>
+    <LayoutGroup Orientation="Vertical">
+      <LayoutGroup>
+        <LayoutItem DashboardItem="cardDashboardItem1" />
+        <LayoutItem DashboardItem="pieDashboardItem1" />
+      </LayoutGroup>
+      <LayoutItem DashboardItem="gridDashboardItem1" />
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

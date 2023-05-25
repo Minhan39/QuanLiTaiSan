@@ -1,0 +1,87 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+     Include Bootstrap for styling 
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+
+    <style>
+        .qr-code {
+            max-width: 200px;
+            margin: 10px;
+        }
+
+        .text-center {
+            width: 100%;
+        }
+
+        .grid-panel {
+            width: calc(100% / 7);
+            float: left;
+        }
+
+            .grid-panel img {
+                width: calc(100% - 10px) !important;
+            }
+
+            .grid-panel p {
+                font-size: calc(84px / 7);
+            }
+    </style>
+
+    <title>QR Code Generator</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div>
+            <button id="btnPrint">Print</button>
+            <p id="demo"></p>
+        </div>
+        <div id="listQr" class="text-center">
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.js">
+    </script>
+
+    <script type="text/javascript">
+        function htmlEncode(value) {
+            return $('<div/>').text(value)
+                .html();
+        }
+
+        $(function () {
+            $(document).ready(function () {
+                if ($('#listQr').children().length == 0) {
+                    var list = @Html.Raw(Json.Encode(@ViewBag.AssetId));
+                    $.each(list, function (index, value) {
+                        console.log(value);
+                        let finalURL =
+                            'https://chart.googleapis.com/chart?cht=qr&chl=' +
+                            htmlEncode(value) +
+                            '&chs=160x160&chld=L|0';
+                        $('#listQr').prepend('<div class="grid-panel"><img src="' + finalURL + '" class="qr-code img-thumbnail img-responsive" /><p>Tài sản</p></div>');
+                    })
+                }
+            });
+        });
+        $('#btnPrint').click(function () {
+            const printContainer = $('<div/>');
+            printContainer.append($('.text-center').clone());
+
+            const originalContents = $('body').html();
+
+            $('body').empty().append(printContainer);
+            window.print();
+            $('body').html(originalContents);
+        });
+    </script>
+</body>
+
+</html>

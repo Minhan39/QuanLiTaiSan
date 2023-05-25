@@ -1,0 +1,372 @@
+﻿@using QLTS.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutDevexpress.cshtml";
+}
+
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/GridView.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Content/GridView.js")"></script>
+}
+
+<script>
+    var listKeyMaster = @Html.Raw(Json.Encode(ViewBag.GetAllKeyMaster));
+    function onPrintQr() {
+        var res = "";
+        for (let i = 0; i < listKeyMaster.length; i++) {
+            var grid = 'detailGrid_' + listKeyMaster[i];
+            if (i > 0) {
+                res += ',';
+            }
+            res += window[grid].GetSelectedKeysOnPage();
+        }
+        window.open(window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/Asset/PrintQr?selectId=" + res);
+    }
+    function onDownloadXlsx() {
+        @*window.alert("Hi");*@
+        window.location.href = '@Url.Action("DownloadXlsx", "Asset", new { fileName = "import_asset_detail.xlsx" })';
+    }
+    function onLoadData() {
+        for (let i = 0; i < listKeyMaster.length; i++) {
+
+
+
+            window[gridDetail].Refresh();
+        }
+    }
+</script>
+
+@section PageToolbar {
+    @Html.DevExpress().Menu(menuSettings =>
+{
+    menuSettings.Name = "pageToolbar";
+
+    menuSettings.ItemAutoWidth = false;
+    menuSettings.AllowSelectItem = false;
+    menuSettings.ApplyItemStyleToTemplates = true;
+
+    menuSettings.SettingsAdaptivity.Enabled = true;
+    menuSettings.SettingsAdaptivity.EnableAutoHideRootItems = true;
+    menuSettings.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+    menuSettings.SettingsAdaptivity.CollapseRootItemsToIconsAtWindowInnerWidth = 600;
+
+    menuSettings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+    menuSettings.ControlStyle.SeparatorWidth = System.Web.UI.WebControls.Unit.Pixel(0);
+    menuSettings.ControlStyle.CssClass = "page-toolbar";
+
+    menuSettings.Styles.Item.CssClass = "item";
+    menuSettings.Styles.Item.VerticalAlign = System.Web.UI.WebControls.VerticalAlign.Middle;
+
+    menuSettings.Images.Item.Width = System.Web.UI.WebControls.Unit.Pixel(16);
+    menuSettings.Images.Item.Height = System.Web.UI.WebControls.Unit.Pixel(16);
+
+    menuSettings.Items.Add(item =>
+    {
+        item.Enabled = false;
+        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Chế độ hiển thị theo ô</h1>"));
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Text = "Chi tiết tài sản";
+        item.Items.Add(subItem => {
+            subItem.Name = "DownloadXlsx";
+            subItem.Text = "Tải mẫu excel";
+        });
+        item.Items.Add(subItem => {
+            subItem.Name = "ShowImportXlsx";
+            subItem.Text = "Thêm danh sách đánh mã";
+        });
+        item.Items.Add(subItem =>
+        {
+            subItem.Name = "Qr";
+            subItem.Text = "Tạo QRCode";
+        });
+        item.Alignment = MenuItemAlignment.Right;
+        item.AdaptivePriority = 2;
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "LoadData";
+        item.Text = "Tải lại";
+        item.Alignment = MenuItemAlignment.Right;
+        item.AdaptivePriority = 2;
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "New";
+        item.Text = "Thêm";
+        item.Alignment = MenuItemAlignment.Right;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "~/Content/Images/add.svg";
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "Edit";
+        item.Text = "Sửa";
+        item.Alignment = MenuItemAlignment.Right;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "~/Content/Images/edit.svg";
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "Delete";
+        item.Text = "Xoá";
+        item.Alignment = MenuItemAlignment.Right;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "~/Content/Images/delete.svg";
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "Export";
+        item.Text = "Xuất file";
+        item.Alignment = MenuItemAlignment.Right;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "~/Content/Images/export.svg";
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "ToggleFilterPanel";
+        item.Text = "";
+        item.GroupName = "Filter";
+        item.Alignment = MenuItemAlignment.Right;
+        item.AdaptivePriority = 1;
+        item.Image.Url = "~/Content/Images/search.svg";
+        item.Image.UrlChecked = "~/Content/Images/search-selected.svg";
+    });
+    menuSettings.ClientSideEvents.ItemClick = "function(s,e){ switch(e.item.name) {case 'Qr': onPrintQr(); break; case 'DownloadXlsx': onDownloadXlsx(); break; case 'ShowImportXlsx': popupControl.Show(); break; case 'LoadData': onLoadData(); break; default: onPageToolbarItemClick(s,e); break;} }";
+}).GetHtml()
+
+    @Html.DevExpress().Panel(panelSettings =>
+    {
+        panelSettings.Name = "filterPanel";
+    panelSettings.Collapsible = true;
+    panelSettings.ControlStyle.CssClass = "filter-panel";
+
+    panelSettings.SettingsCollapsing.ExpandEffect = PanelExpandEffect.Slide;
+    panelSettings.SettingsCollapsing.AnimationType = AnimationType.None;
+    panelSettings.SettingsCollapsing.ExpandButton.Visible = false;
+
+    panelSettings.SetContent(() =>
+        {
+            Html.DevExpress().ButtonEdit(buttonEditSettings =>
+            {
+            buttonEditSettings.Name = "searchButtonEdit";
+            buttonEditSettings.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.Always;
+            buttonEditSettings.Properties.Caption = "Tìm kiếm";
+            buttonEditSettings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        }).GetHtml();
+    });
+
+    panelSettings.ClientSideEvents.Expanded = "onFilterPanelExpanded";
+    panelSettings.ClientSideEvents.Collapsed = "adjustPageControls";
+}).GetHtml()
+}
+
+@section LeftPanelContent {
+    @Html.Partial("LeftPanelPartial")
+}
+
+<script type="text/javascript">
+    function OnGridFocusedRowChanged(s, e) {
+        s.GetRowValues(s.GetFocusedRowIndex(), 'Id;AtUsing;YearOfUse;AtExpiration;AtStartOfDepreciation;QualityStatus;DepreciationRate;Maintenance;Notes', OnGetRowValues);
+    }
+    function OnGetRowValues(values) {
+        DetailPhoto.SetImageUrl("@AssetHelper.GetImageRouteUrl()?@AssetHelper.ImageQueryKey=" + values[0]);
+        DetailAtUsing.SetValue(values[1]);
+        DetailYearOfUse.SetText(values[2]);
+        DetailAtExpiration.SetValue(values[3]);
+        DetailAtStartOfDepreciation.SetValue(values[4]);
+        DetailQualityStatus.SetText(values[5]);
+        DetailDepreciationRate.SetText(values[6]);
+        DetailMaintenance.SetText(values[7]);
+        DetailNotes.SetText(values[8]);
+    }
+</script>
+
+@using (Html.BeginForm("Import", "Asset", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{ 
+    @Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "popupControl";
+        settings.HeaderText = "Thông chi tiết tài sản";
+        settings.ShowOnPageLoad = false;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+        settings.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+        settings.SettingsAdaptivity.MaxWidth = System.Web.UI.WebControls.Unit.Pixel(700);
+        settings.AllowDragging = false;
+        settings.ShowFooter = true;
+        @*settings.EnableHotTrack = true;*@
+        settings.Styles.Content.Paddings.Padding = 0;
+        settings.Styles.Content.Paddings.PaddingTop = 12;
+        settings.PopupElementID = "ShowImportXlsx";
+
+        settings.SetFooterTemplateContent(c =>
+        {
+            @Html.DevExpress().FormLayout(formLayoutsettings =>
+            {
+                formLayoutsettings.Name = "footerFormLayout";
+                formLayoutsettings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+                formLayoutsettings.ControlStyle.CssClass = "clearPaddings";
+                formLayoutsettings.Styles.LayoutItem.CssClass = "clearPaddings";
+                formLayoutsettings.Styles.LayoutGroup.CssClass = "clearPaddings";
+                formLayoutsettings.Items.AddGroupItem(g =>
+                {
+                    g.GroupBoxDecoration = GroupBoxDecoration.None;
+                    g.Paddings.Padding = System.Web.UI.WebControls.Unit.Pixel(0);
+                    g.Items.Add(i =>
+                    {
+                        i.ShowCaption = DefaultBoolean.False;
+                    }).SetNestedContent(() =>
+                    {
+                        ViewContext.Writer.Write("<div class='buttonsContainer'>");
+                        Html.DevExpress().Button(s =>
+                        {
+                            s.Name = "Submit";
+                            s.Width = System.Web.UI.WebControls.Unit.Pixel(100);
+                            s.ControlStyle.CssClass = "submitButton";
+                            s.Text = "Lưu";
+                            s.UseSubmitBehavior = true;
+                        }).Render();
+                        ViewContext.Writer.Write("</div>");
+                    });
+                });
+            }).Render();
+        });
+        settings.SetContent(() =>
+        {
+            @Html.DevExpress().FormLayout(formLayoutsettings =>
+            {
+                formLayoutsettings.Name = "detailFormLayout";
+                formLayoutsettings.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+                formLayoutsettings.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 576;
+
+                formLayoutsettings.Items.AddGroupItem(g =>
+                {
+                    g.Caption = "Tải danh sách chi tiết tài sản";
+                    g.ColCount = 2;
+                    g.Paddings.Padding = System.Web.UI.WebControls.Unit.Pixel(0);
+                    g.Paddings.PaddingTop = System.Web.UI.WebControls.Unit.Pixel(10);
+                    g.GroupBoxDecoration = GroupBoxDecoration.HeadingLine;
+                    g.GroupBoxStyle.Caption.Font.Bold = true;
+                    g.GroupBoxStyle.Caption.Font.Size = 16;
+                    g.GroupBoxStyle.Caption.CssClass = "groupCaption";
+                    g.Items.Add(item =>
+                    {
+                        item.Name = "file";
+                        item.Caption = "file";
+                    }).SetNestedContent(() => {
+                        ViewContext.Writer.Write("<input type='file' name='file'>");
+                    });
+                });
+            }).Render();
+        });
+    }).GetHtml()
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("GridViewPartial")
+}
+<div class="details_form" style="margin-top: 12px; margin-left: 12px;">
+    Chi tiết:<br />
+    <div style="display: flex; flex-direction: row;">
+        @Html.DevExpress().Image(settings =>
+        {
+            settings.Name = "DetailPhoto";
+            settings.ControlStyle.CssClass = "image";
+            settings.Width = 160;
+            settings.Height = 170;
+            settings.Properties.EnableClientSideAPI = true;
+        }).GetHtml()
+        <table style="margin-left: 6px;">
+            <tr>
+                <td style="font-size: 12px; width: 150px;">Ngày sử dụng:</td>
+                <td>
+                    @Html.DevExpress().DateEdit(settings =>
+                    {
+                        settings.Name = "DetailAtUsing";
+                        settings.ReadOnly = true;
+                        settings.Properties.EnableClientSideAPI = true;
+                    }).GetHtml()
+                </td>
+                <td style="font-size: 12px; width: 150px; padding-left: 6px;">Tỉ lệ khấu hao(%):</td>
+                <td>
+                    @Html.DevExpress().TextBox(settings =>
+                    {
+                        settings.Name = "DetailDepreciationRate";
+                        settings.ReadOnly = true;
+                        settings.Properties.EnableClientSideAPI = true;
+                    }).GetHtml()
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 12px;">Số năm sử dụng:</td>
+                <td>
+                    @Html.DevExpress().TextBox(settings =>
+                    {
+                        settings.Name = "DetailYearOfUse";
+                        settings.ReadOnly = true;
+                        settings.Properties.EnableClientSideAPI = true;
+                    }).GetHtml()
+                </td>
+                <td style="font-size: 12px; width: 175px; padding-left: 6px;">Định kỳ bảo dưỡng(lần/tháng):</td>
+                <td>
+                    @Html.DevExpress().TextBox(settings =>
+                    {
+                        settings.Name = "DetailMaintenance";
+                        settings.ReadOnly = true;
+                        settings.Properties.EnableClientSideAPI = true;
+                    }).GetHtml()
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 12px;">Ngày hết hạn sử dụng:</td>
+                <td>
+                    @Html.DevExpress().DateEdit(settings =>
+                    {
+                        settings.Name = "DetailAtExpiration";
+                        settings.ReadOnly = true;
+                        settings.Properties.EnableClientSideAPI = true;
+                    }).GetHtml()
+                </td>
+                <td style="font-size: 12px; width: 175px; padding-left: 6px;">Ghi chú:</td>
+                <td rowspan="3">
+                    @Html.DevExpress().Memo(settings =>
+                    {
+                        settings.Name = "DetailNotes";
+                        settings.ControlStyle.CssClass = "memo";
+                        settings.Height = 100;
+                        settings.Width = 400;
+                        settings.ReadOnly = true;
+                        settings.Properties.EnableClientSideAPI = true;
+                    }).GetHtml()
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 12px;">Ngày bắt đầu khấu hao:</td>
+                <td>
+                    @Html.DevExpress().DateEdit(settings =>
+                    {
+                        settings.Name = "DetailAtStartOfDepreciation";
+                        settings.ReadOnly = true;
+                        settings.Properties.EnableClientSideAPI = true;
+                    }).GetHtml()
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 12px;">Tình trạng chất lượng(%):</td>
+                <td>
+                    @Html.DevExpress().TextBox(settings =>
+                    {
+                        settings.Name = "DetailQualityStatus";
+                        settings.ReadOnly = true;
+                        settings.Properties.EnableClientSideAPI = true;
+                    }).GetHtml()
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+

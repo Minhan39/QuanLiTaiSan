@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutDevexpress.cshtml";
+}
+
+
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/GridView.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Content/GridView.js")"></script>
+}
+
+@section LeftPanelContent {
+    @Html.Partial("LeftPanelPartial")
+}
+
+@*@Html.Action("ChartPartial", "Dashboard")*@
+
+
+<script type="text/javascript">
+    @*function onBeforeRender(sender) {
+        var control = sender.GetDashboardControl();
+        control.registerExtension(new DevExpress.Dashboard.DashboardPanelExtension(control, { dashboardThumbnail: "./Content/DashboardThumbnail/{0}.png" }));
+    }*@
+    @*function reloadOnServer() {
+        $.ajax({
+            url: '@Url.Action("Refresh")',
+            success: function (data) {
+                Dashboard.GetDashboardControl().refresh();
+                // To refresh specific dashboard items, pass their names as parameters:
+                // WebDashboard1.GetDashboardControl().refresh( ["chartDashboardItem1", "listBoxDashboardItem1"] );
+            }
+        })
+    }*@
+    function reloadOnClient() {
+        Dashboard.GetDashboardControl().reloadData();
+    }
+</script>
+
+@*<div style="position: absolute; top: 5px; left: 192px">
+        @Html.DevExpress().Button(settings =>
+        {
+            settings.Name = "ButtonServer";
+            settings.Text = "Reset Cache (Server)";
+            settings.UseSubmitBehavior = false;
+            settings.ClientSideEvents.Click = "reloadOnServer";
+        }).GetHtml()
+    </div>*@
+<div style="position: absolute; top: 5px; left: 5px">
+    @Html.DevExpress().Button(settings =>
+    {
+        settings.Name = "ButtonClient";
+        settings.UseSubmitBehavior = false;
+        settings.Text = "Tải lại dữ liệu";
+        settings.ClientSideEvents.Click = "reloadOnClient";
+    }).GetHtml()
+</div>
+
+<div style="position: absolute; left: 0; top: 43px; right: 0; bottom: 0; border-top: 1px solid #cfcfcf">
+    @Html.DevExpress().Dashboard(settings =>
+    {
+        settings.Name = "Dashboard";
+        settings.ControllerName = "DefaultDashboard";
+        settings.WorkingMode = ViewBag.DashboardName != "dashboard1" ? DevExpress.DashboardWeb.WorkingMode.Viewer : DevExpress.DashboardWeb.WorkingMode.Designer;
+        settings.InitialDashboardId = ViewBag.DashboardName;
+    }).GetHtml()
+</div>

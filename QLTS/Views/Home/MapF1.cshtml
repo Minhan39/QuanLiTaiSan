@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutDevexpress.cshtml";
+}
+
+
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/GridView.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Content/GridView.js")"></script>
+}
+
+@section LeftPanelContent {
+    @Html.Partial("LeftPanelPartial")
+}
+<h2 style="padding-left: 6px; height: 5vh;">Các phòng dãy F1</h2>
+<div style="display:flex; align-items: center; justify-content: center; height: 65vh;">
+    <img src="@Url.Content("~/Content/Images/F1_Map.png")" alt="f1" usemap="#f1map" width="1057" height="132">
+    <!-- The map element has a name attribute that matches the usemap value -->
+    <map name="f1map">
+        <area target="" alt="Phòng phó giáo sư 1" title="Phòng phó giáo sư 1" href="https://localhost:44325/Home/MapF1" coords="15,20,176,114" shape="rect">
+        <area target="" alt="Phòng phó giáo sư 2" title="Phòng phó giáo sư 2" href="https://localhost:44325/Home/MapF1" coords="186,18,348,112" shape="rect">
+        <area target="" alt="Phòng phó giáo sư 3" title="Phòng phó giáo sư 3" href="https://localhost:44325/Home/MapF1" coords="359,18,521,110" shape="rect">
+        <area target="" alt="Elearning" title="Elearning" href="https://localhost:44325/Home/Dashboard?item=elearning" coords="530,16,694,111" shape="rect">
+        <area target="" alt="Viện Đào tạo Sau Đại học" title="Viện Đào tạo Sau Đại học" href="https://localhost:44325/Home/MapF1" coords="704,19,866,112" shape="rect">
+        <area target="" alt="Viện phát triển Đông Nam Bộ" title="Viện phát triển Đông Nam Bộ" href="https://localhost:44325/Home/MapF1" coords="877,18,1039,111" shape="rect">
+    </map>
+</div>

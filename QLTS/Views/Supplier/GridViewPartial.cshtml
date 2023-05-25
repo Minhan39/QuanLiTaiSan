@@ -1,0 +1,209 @@
+﻿@model List<QLTS.Models.SupplierModel>
+
+@{
+    var gridView = Html.DevExpress().GridView(gridViewSettings =>
+    {
+        gridViewSettings.Name = "gridView";
+        gridViewSettings.KeyFieldName = "Id";
+
+        gridViewSettings.CallbackRouteValues = new { Controller = "Supplier", Action = "GridViewPartial" };
+        gridViewSettings.CustomActionRouteValues = new { Controller = "Supplier", Action = "GridViewCustomActionPartial" };
+        gridViewSettings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Supplier", Action = "GridViewAddNewPartial" };
+        gridViewSettings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Supplier", Action = "GridViewUpdatePartial" };
+
+        gridViewSettings.EnablePagingGestures = AutoBoolean.False;
+
+        gridViewSettings.ControlStyle.CssClass = "grid-view";
+        gridViewSettings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+
+        gridViewSettings.Styles.Cell.Wrap = DefaultBoolean.False;
+        gridViewSettings.Styles.PagerBottomPanel.CssClass = "pager";
+        gridViewSettings.Styles.FocusedRow.CssClass = "focused";
+
+        gridViewSettings.SettingsResizing.ColumnResizeMode = ColumnResizeMode.Control;
+        gridViewSettings.SettingsResizing.Visualization = ResizingMode.Live;
+
+        gridViewSettings.SettingsBehavior.ProcessColumnMoveOnClient = true;
+        gridViewSettings.SettingsBehavior.ColumnMoveMode = GridColumnMoveMode.AmongSiblings;
+
+        gridViewSettings.SettingsBehavior.AllowFocusedRow = true;
+        gridViewSettings.SettingsBehavior.AllowSelectByRowClick = true;
+        gridViewSettings.SettingsBehavior.AllowEllipsisInText = true;
+        gridViewSettings.SettingsBehavior.AllowDragDrop = true;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+
+        gridViewSettings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        gridViewSettings.SettingsEditing.EditFormColumnCount = 2;
+
+        gridViewSettings.SettingsSearchPanel.CustomEditorName = "searchButtonEdit";
+
+        gridViewSettings.Settings.VerticalScrollBarMode = ScrollBarMode.Hidden;
+        gridViewSettings.Settings.HorizontalScrollBarMode = ScrollBarMode.Auto;
+        gridViewSettings.Settings.ShowHeaderFilterButton = true;
+
+        gridViewSettings.SettingsPager.PageSize = 15;
+        gridViewSettings.SettingsPager.EnableAdaptivity = true;
+        gridViewSettings.SettingsPager.PageSizeItemSettings.Visible = true;
+
+        gridViewSettings.SettingsExport.EnableClientSideExportAPI = true;
+        gridViewSettings.SettingsExport.ExportSelectedRowsOnly = true;
+
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.MaxWidth = 800;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.Always;
+        gridViewSettings.SettingsPopup.EditForm.SettingsAdaptivity.VerticalAlign = PopupAdaptiveVerticalAlign.WindowCenter;
+        gridViewSettings.SettingsText.PopupEditFormCaption = "Biểu mẫu";
+        gridViewSettings.SettingsText.CommandUpdate = "Lưu";
+        gridViewSettings.SettingsText.CommandCancel = "Huỷ";
+        gridViewSettings.SettingsPager.PageSizeItemSettings.Caption = "Kích cỡ";
+        gridViewSettings.SettingsPager.Summary.Text = "Trang {0} / {1} ({2:n0} bản ghi)";
+
+        gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.AdaptivityMode = FormLayoutAdaptivityMode.SingleColumnWindowLimit;
+        gridViewSettings.EditFormLayoutProperties.SettingsAdaptivity.SwitchToSingleColumnAtWindowInnerWidth = 600;
+        gridViewSettings.EditFormLayoutProperties.ColCount = 2;
+        gridViewSettings.EditFormLayoutProperties.Items.Add("Name").RequiredMarkDisplayMode = FieldRequiredMarkMode.Required;
+        gridViewSettings.EditFormLayoutProperties.Items.Add("TaxCode").RequiredMarkDisplayMode = FieldRequiredMarkMode.Required; ;
+        gridViewSettings.EditFormLayoutProperties.Items.Add("Group");
+        gridViewSettings.EditFormLayoutProperties.Items.Add("Subject");
+        gridViewSettings.EditFormLayoutProperties.Items.Add("Email");
+        gridViewSettings.EditFormLayoutProperties.Items.Add("Phone");
+        gridViewSettings.EditFormLayoutProperties.Items.Add("Fax");
+        gridViewSettings.EditFormLayoutProperties.Items.Add("Address");
+        gridViewSettings.EditFormLayoutProperties.Items.Add("Country");
+        gridViewSettings.EditFormLayoutProperties.Items.Add("City");
+        gridViewSettings.EditFormLayoutProperties.Items.Add("District");
+        gridViewSettings.EditFormLayoutProperties.Items.Add("Ward");
+        gridViewSettings.EditFormLayoutProperties.Items.AddCommandItem(itemSettings =>
+        {
+            itemSettings.ColumnSpan = 2;
+            itemSettings.HorizontalAlign = FormLayoutHorizontalAlign.Right;
+        });
+
+        gridViewSettings.CommandColumn.Visible = true;
+        gridViewSettings.CommandColumn.ShowSelectCheckbox = true;
+        gridViewSettings.CommandColumn.SelectAllCheckboxMode = GridViewSelectAllCheckBoxMode.AllPages;
+        gridViewSettings.CommandColumn.VisibleIndex = 0;
+        gridViewSettings.CommandColumn.Width = System.Web.UI.WebControls.Unit.Pixel(52);
+
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "Id";
+            columnSettings.Caption = "Mã";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(80);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "Name";
+            columnSettings.Caption = "Tên";
+
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(300);
+            columnSettings.CellStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Left;
+            columnSettings.ExportCellStyle.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Left;
+            columnSettings.SetDataItemTemplateContent(c =>
+            {
+                Html.DevExpress().HyperLink(hyperLinkSettings =>
+                {
+                    hyperLinkSettings.Properties.Text = (string)DataBinder.Eval(c.DataItem, "Name");
+                    hyperLinkSettings.NavigateUrl = Url.Action("GridViewDetailsPage", "Supplier", new { id = DataBinder.Eval(c.DataItem, "Id") });
+                }).Render();
+            });
+
+            columnSettings.Settings.FilterMode = ColumnFilterMode.DisplayText;
+            columnSettings.Settings.SortMode = DevExpress.XtraGrid.ColumnSortMode.DisplayText;
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "Group";
+            columnSettings.Caption = "Nhóm";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "Subject";
+            columnSettings.Caption = "Đối tượng";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "TaxCode";
+            columnSettings.Caption = "Mã ST";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "Email";
+            columnSettings.Caption = "Email";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(230);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "Phone";
+            columnSettings.Caption = "SĐT";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "Fax";
+            columnSettings.Caption = "Số Fax";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "Address";
+            columnSettings.Caption = "Địa chỉ";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "Country";
+            columnSettings.Caption = "Đất nước";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "City";
+            columnSettings.Caption = "Tỉnh/Thành phố";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "District";
+            columnSettings.Caption = "Quận/Huyện";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "Ward";
+            columnSettings.Caption = "Phường/Xã";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(150);
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "AtCreate";
+            columnSettings.Caption = "Ngày tạo";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(200);
+            columnSettings.PropertiesEdit.DisplayFormatString = "d";
+        });
+        gridViewSettings.Columns.Add(columnSettings =>
+        {
+            columnSettings.FieldName = "AtUpdate";
+            columnSettings.Caption = "Ngày chỉnh sửa";
+            columnSettings.Width = System.Web.UI.WebControls.Unit.Pixel(200);
+            columnSettings.PropertiesEdit.DisplayFormatString = "d";
+        });
+        gridViewSettings.ClientSideEvents.Init = "onGridViewInit";
+        gridViewSettings.ClientSideEvents.SelectionChanged = "onGridViewSelectionChanged";
+        gridViewSettings.ClientSideEvents.BeginCallback = "onGridViewBeginCallback";
+
+        gridViewSettings.CellEditorInitialize = (s, e) =>
+        {
+            ((ASPxEdit)e.Editor).ValidationSettings.Display = Display.Dynamic;
+        };
+    });
+    if (ViewBag.GeneralError != null)
+    {
+        gridView.SetEditErrorText(ViewBag.GeneralError);
+    }
+}
+
+@gridView.Bind(Model).GetHtml()

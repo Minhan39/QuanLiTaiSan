@@ -1,0 +1,146 @@
+﻿@using QLTS.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutDevexpress.cshtml";
+}
+
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/GridView.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Content/GridView.js")"></script>
+}
+
+@section PageToolbar {
+    @Html.DevExpress().Menu(menuSettings =>
+{
+    menuSettings.Name = "pageToolbar";
+
+    menuSettings.ItemAutoWidth = false;
+    menuSettings.AllowSelectItem = false;
+    menuSettings.ApplyItemStyleToTemplates = true;
+
+    menuSettings.SettingsAdaptivity.Enabled = true;
+    menuSettings.SettingsAdaptivity.EnableAutoHideRootItems = true;
+    menuSettings.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+    menuSettings.SettingsAdaptivity.CollapseRootItemsToIconsAtWindowInnerWidth = 600;
+
+    menuSettings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+    menuSettings.ControlStyle.SeparatorWidth = System.Web.UI.WebControls.Unit.Pixel(0);
+    menuSettings.ControlStyle.CssClass = "page-toolbar";
+
+    menuSettings.Styles.Item.CssClass = "item";
+    menuSettings.Styles.Item.VerticalAlign = System.Web.UI.WebControls.VerticalAlign.Middle;
+
+    menuSettings.Images.Item.Width = System.Web.UI.WebControls.Unit.Pixel(16);
+    menuSettings.Images.Item.Height = System.Web.UI.WebControls.Unit.Pixel(16);
+
+    menuSettings.Items.Add(item =>
+    {
+        item.Enabled = false;
+        item.SetTemplateContent(template => ViewContext.Writer.Write("<h1>Chế độ hiển thị theo ô</h1>"));
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "Edit";
+        item.Text = "Sửa";
+        item.Alignment = MenuItemAlignment.Right;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "~/Content/Images/edit.svg";
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "Delete";
+        item.Text = "Xoá";
+        item.Alignment = MenuItemAlignment.Right;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "~/Content/Images/delete.svg";
+        item.Visible = false;
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "Export";
+        item.Text = "Xuất file";
+        item.Alignment = MenuItemAlignment.Right;
+        item.AdaptivePriority = 2;
+        item.Image.Url = "~/Content/Images/export.svg";
+        item.Visible = false;
+    });
+    menuSettings.Items.Add(item =>
+    {
+        item.Name = "ToggleFilterPanel";
+        item.Text = "";
+        item.GroupName = "Filter";
+        item.Alignment = MenuItemAlignment.Right;
+        item.AdaptivePriority = 1;
+        item.Image.Url = "~/Content/Images/search.svg";
+        item.Image.UrlChecked = "~/Content/Images/search-selected.svg";
+    });
+    menuSettings.ClientSideEvents.ItemClick = "onPageToolbarItemClick";
+}).GetHtml()
+
+    @Html.DevExpress().Panel(panelSettings =>
+    {
+        panelSettings.Name = "filterPanel";
+    panelSettings.Collapsible = true;
+    panelSettings.ControlStyle.CssClass = "filter-panel";
+
+    panelSettings.SettingsCollapsing.ExpandEffect = PanelExpandEffect.Slide;
+    panelSettings.SettingsCollapsing.AnimationType = AnimationType.None;
+    panelSettings.SettingsCollapsing.ExpandButton.Visible = false;
+
+    panelSettings.SetContent(() =>
+        {
+            Html.DevExpress().ButtonEdit(buttonEditSettings =>
+            {
+            buttonEditSettings.Name = "searchButtonEdit";
+            buttonEditSettings.Properties.ClearButton.DisplayMode = ClearButtonDisplayMode.Always;
+            buttonEditSettings.Properties.Caption = "Tìm kiếm";
+            buttonEditSettings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        }).GetHtml();
+    });
+
+    panelSettings.ClientSideEvents.Expanded = "onFilterPanelExpanded";
+    panelSettings.ClientSideEvents.Collapsed = "adjustPageControls";
+}).GetHtml()
+}
+
+@section LeftPanelContent {
+    @Html.Partial("LeftPanelPartial")
+}
+
+<script type="text/javascript">
+    function OnGridFocusedRowChanged(s, e) {
+        s.GetRowValues(s.GetFocusedRowIndex(), 'Id;Message', OnGetRowValues);
+    }
+    function OnGetRowValues(values) {
+        DetailPhoto.SetImageUrl("@ErrorReportHelper.GetErrorImageRouteUrl()?@ErrorReportHelper.ImageQueryKey=" + values[0]);
+        DetailMessage.SetText(values[1]);
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("GridViewPartial")
+}
+<div class="details_form" style="margin-top: 12px; margin-left: 12px;">
+    Chi tiết:<br />
+    <div style="display: flex; flex-direction: row;">
+        @Html.DevExpress().Image(settings =>
+        {
+            settings.Name = "DetailPhoto";
+            settings.ControlStyle.CssClass = "image";
+            settings.Width = 160;
+            settings.Height = 170;
+            settings.Properties.EnableClientSideAPI = true;
+        }).GetHtml()
+        @Html.DevExpress().Memo(settings =>
+        {
+            settings.Name = "DetailMessage";
+            settings.ControlStyle.CssClass = "memo";
+            settings.ReadOnly = true;
+            settings.Width = 530;
+            settings.Height = 170;
+            settings.Properties.EnableClientSideAPI = true;
+        }).GetHtml()
+    </div>
+</div>

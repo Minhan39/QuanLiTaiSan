@@ -1,0 +1,89 @@
+﻿@model QLTS.Models.ErrorReportModel
+@{
+    ViewBag.Title = "Progress";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .progress {
+        margin-top: 24px;
+    }
+
+    .btn-active {
+        background-color: #f88424;
+        color: #ffffff;
+    }
+
+    .progress-bar {
+        background-color: #f88424;
+    }
+
+    .step {
+        display: none;
+    }
+
+    .step-active {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .btn {
+        font-weight: bold;
+        font-size: 20px;
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+
+    .progress-step {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
+@{
+    int progressStep = Model.Step;
+    var btnStep1Css = progressStep >= 1 ? "btn btn-active" : "btn";
+    var btnStep2Css = progressStep >= 2 ? "btn btn-active" : "btn";
+    var btnStep3Css = progressStep >= 3 ? "btn btn-active" : "btn";
+    var btnStep4Css = progressStep >= 4 ? "btn btn-active" : "btn";
+    var sizeProgress = progressStep * 25;
+    var step1Css = progressStep == 1 ? "step-active" : "step";
+    var step2Css = progressStep == 2 ? "step-active" : "step";
+    var step3Css = progressStep == 3 ? "step-active" : "step";
+    var step4Css = progressStep == 4 ? "step-active" : "step";
+}
+
+<h2>Quá trình báo cáo</h2>
+<p>Đây là quá trình báo cáo hư hỏng tài sản của bạn, rất cảm ơn bạn đã theo dõi quá trình này, nếu có vấn đề phát sinh bạn vui lòng liên hệ quản trị và phòng cơ sỏ vật chất để nhận được kết quả sớm nhất.</p>
+<div class="progress-step">
+    <button class="@btnStep1Css">Bước 1</button>
+    <button class="@btnStep2Css">Bước 2</button>
+    <button class="@btnStep3Css">Bước 3</button>
+    <button class="@btnStep4Css">Bước 4</button>
+</div>
+<div class="progress">
+    <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="@sizeProgress" aria-valuemin="0" aria-valuemax="100" style="width: @string.Format("{0}%", sizeProgress.ToString())"></div>
+</div>
+<div id="step1" class="@step1Css">
+    <h3>Hiện tại bạn đang ở bước 1</h3>
+    <p>Tại bước 1, bạn đã thực hiện gửi báo cáo tài sán về cho quản trị viên. Để tới bước tiếp theo, bạn vui lòng chờ đợi quản trị viên xác nhận.</p>
+</div>
+<div id="step2" class="@step2Css">
+    <h3>Hiện tại bạn đang ở bước 2</h3>
+    <p>Tại bước 2, quản trị viên đã xem báo cáo của bạn, vui lòng đợi xác nhận từ quản trị viên.</p>
+</div>
+<div id="step3" class="@step3Css">
+    <h3>Hiện tại bạn đang ở bước 3</h3>
+    <p>Tại bước 3, kỹ thuật viên đang tiến hành xem xét và sửa chữa, quá trình có thể mất nhiều ngày do các yếu tố bảo hành, sửa chữa. Bạn vui lòng đợi đến khi hoàn tất sửa chữa.</p>
+    @using(Html.BeginForm("Progress", "ErrorReport", FormMethod.Post))
+    {
+        <p>Vui lòng xác nhận khi kỹ thuật đã hoàn thành việc sửa chữa</p>
+        <input name="reportId" value="@Model.Id" hidden />
+        <input name="email" value="@Model.Staff.Email" hidden />
+        <button type="submit" class="btn btn-active">Xác nhận</button>
+    }
+</div>
+<div id="step4" class="@step4Css">
+    <h3>Hiện tại bạn đang ở bước 4</h3>
+    <p>Tại bước 4, kỹ thuật viên đã hoàn thành việc sửa chữa, quá trình đã kết thúc.</p>
+</div>

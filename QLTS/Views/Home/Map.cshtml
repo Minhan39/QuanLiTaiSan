@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutDevexpress.cshtml";
+}
+
+
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/GridView.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Content/GridView.js")"></script>
+}
+
+@section LeftPanelContent {
+    @Html.Partial("LeftPanelPartial")
+}
+<div style="display:flex; justify-content: center;">
+    <img src="@Url.Content("~/Content/Images/TDMU_Map.jpg")" alt="master" usemap="#mastermap" width="854" height="1110">
+    <!-- The map element has a name attribute that matches the usemap value -->
+    <map name="mastermap">
+        <area target="" alt="K" title="K" href="https://localhost:44325/Home/Map" coords="272,247,357,254,354,291,269,282"
+              shape="poly">
+        <area target="" alt="I1" title="I1" href="https://localhost:44325/Home/Map" coords="416,242,532,278,523,313,405,281"
+              shape="poly">
+        <area target="" alt="I2" title="I2" href="https://localhost:44325/Home/Map" coords="531,283,564,288,544,406,512,400"
+              shape="poly">
+        <area target="" alt="I3" title="I3" href="https://localhost:44325/Home/Map" coords="512,419,663,438,657,468,507,453"
+              shape="poly">
+        <area target="" alt="I4" title="I4" href="https://localhost:44325/Home/Map" coords="624,467,659,472,644,626,609,621"
+              shape="poly">
+        <area target="" alt="A4" title="A4" href="https://localhost:44325/Home/Map" coords="602,629,601,742,631,746,633,630"
+              shape="poly">
+        <area target="" alt="F1" title="F1" href="https://localhost:44325/Home/MapF1"
+              coords="209,483,340,482,340,501,272,502,272,512,208,510" shape="poly">
+        <area target="" alt="G" title="G" href="https://localhost:44325/Home/Map" coords="218,434,340,436,340,454,217,453"
+              shape="poly">
+        <area target="" alt="H" title="H" href="https://localhost:44325/Home/Map" coords="244,389,348,388,348,413,244,413"
+              shape="poly">
+        <area target="" alt="F2" title="F2" href="https://localhost:44325/Home/Map" coords="364,485,415,485,414,508,364,509"
+              shape="poly">
+        <area target="" alt="F3" title="F3" href="https://localhost:44325/Home/Map" coords="432,488,432,506,492,507,493,486"
+              shape="poly">
+        <area target="" alt="E1" title="E1" href="https://localhost:44325/Home/Map"
+              coords="207,515,343,515,343,539,242,536,239,541,206,541" shape="poly">
+        <area target="" alt="E2" title="E2" href="https://localhost:44325/Home/Map" coords="360,520,411,519,412,539,359,539"
+              shape="poly">
+        <area target="" alt="E3" title="E3" href="https://localhost:44325/Home/Map" coords="428,523,492,523,492,545,428,544"
+              shape="poly">
+        <area target="" alt="D" title="D" href="https://localhost:44325/Home/Map" coords="390,563,495,565,494,589,389,589"
+              shape="poly">
+        <area target="" alt="C2" title="C2" href="https://localhost:44325/Home/Map" coords="330,599,331,617,493,615,493,599"
+              shape="poly">
+        <area target="" alt="B" title="B" href="https://localhost:44325/Home/Map" coords="282,605,310,606,312,688,284,688"
+              shape="poly">
+        <area target="" alt="A1" title="A1" href="https://localhost:44325/Home/Map"
+              coords="195,703,299,703,303,784,268,787,266,737,193,737" shape="poly">
+        <area target="" alt="A2" title="A2" href="https://localhost:44325/Home/Map" coords="331,709,489,711,488,747,333,746"
+              shape="poly">
+        <area target="" alt="A3" title="A3" href="https://localhost:44325/Home/Map" coords="502,709,584,709,584,735,503,735"
+              shape="poly">
+        <area target="" alt="K23" title="K23" href="https://localhost:44325/Home/Map"
+              coords="353,755,355,911,489,909,492,782,481,776,481,755" shape="poly">
+    </map>
+</div>
